@@ -2,7 +2,7 @@
 //  File.swift
 //  LLMClient
 //
-//  Created by Usama Khan on 22/07/2025.
+//  Created by Zaid Tayyab on 22/07/2025.
 //
 
 public protocol LLMProvider {
