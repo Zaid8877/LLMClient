@@ -5,6 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "LLMClient",
+    platforms: [
+        .iOS(.v14),     // Supports iPhone & iPad
+        .macOS(.v11)
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
