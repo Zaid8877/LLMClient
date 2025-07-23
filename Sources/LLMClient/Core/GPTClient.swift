@@ -13,6 +13,6 @@ public class GPTClient {
     }
 
     public func send(prompt: String, completion: @escaping @Sendable (Result<String, Error>) -> Void) {
-        provider.sendPrompt(prompt, model: OpenAIConfig.defaultModel, completion: completion)
+        provider.sendPrompt(prompt, model: .gpt3_5Turbo, completion: completion)
     }
 }

@@ -9,14 +9,20 @@ import Foundation
 
 public class OpenAIProvider: LLMProvider {
     private let apiKey: String
-    private let networkClient: NetworkClient
+        private let networkClient: NetworkClient
+        private let model: OpenAIModel
 
-    public init(apiKey: String, networkClient: NetworkClient) {
-        self.apiKey = apiKey
-        self.networkClient = networkClient
-    }
+    public init(
+            apiKey: String,
+            model: OpenAIModel = .gpt3_5Turbo,
+            networkClient: NetworkClient = DefaultNetworkClient()
+        ) {
+            self.apiKey = apiKey
+            self.model = model
+            self.networkClient = networkClient
+        }
 
-    public func sendPrompt(_ prompt: String, model: String, completion: @escaping @Sendable (Result<String, any Error>) -> Void) {
+    public func sendPrompt(_ prompt: String, model: OpenAIModel, completion: @escaping @Sendable (Result<String, any Error>) -> Void) {
         
         var request = URLRequest(url: OpenAIConfig.apiBaseURL)
         request.httpMethod = "POST"
@@ -24,7 +30,7 @@ public class OpenAIProvider: LLMProvider {
         request.addValue(OpenAIConfig.contentTypeJSON, forHTTPHeaderField: OpenAIConfig.contentTypeHeader)
 
         let body: [String: Any] = [
-            "model": OpenAIConfig.defaultModel,
+            "model": model,
             "messages": [
                 ["role": "user", "content": prompt]
             ]
