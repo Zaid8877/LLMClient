@@ -12,7 +12,7 @@ public class GPTClient {
         self.provider = provider
     }
 
-    public func send(prompt: String, completion: @escaping @Sendable (Result<String, Error>) -> Void) {
-        provider.sendPrompt(prompt, model: .gpt3_5Turbo, completion: completion)
+    public func send(prompt: String) async throws -> String {
+        try await provider.sendPrompt(prompt, model: .gpt3_5Turbo)
     }
 }

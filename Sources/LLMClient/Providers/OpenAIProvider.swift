@@ -8,6 +8,8 @@
 import Foundation
 
 public class OpenAIProvider: LLMProvider {
+    
+    
     private let apiKey: String
         private let networkClient: NetworkClient
         private let model: OpenAIModel
@@ -22,35 +24,26 @@ public class OpenAIProvider: LLMProvider {
             self.networkClient = networkClient
         }
 
-    public func sendPrompt(_ prompt: String, model: OpenAIModel, completion: @escaping @Sendable (Result<String, any Error>) -> Void) {
-        
+    public func sendPrompt(_ prompt: String, model: OpenAIModel) async throws -> String {
         var request = URLRequest(url: OpenAIConfig.apiBaseURL)
         request.httpMethod = "POST"
         request.addValue("Bearer \(apiKey)", forHTTPHeaderField: OpenAIConfig.authHeader)
         request.addValue(OpenAIConfig.contentTypeJSON, forHTTPHeaderField: OpenAIConfig.contentTypeHeader)
 
         let body: [String: Any] = [
-            "model": model,
+            "model": model.modelName,
             "messages": [
                 ["role": "user", "content": prompt]
             ]
         ]
 
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        } catch {
-            completion(.failure(error))
-            return
-        }
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
-        networkClient.sendRequest(request, responseType: OpenAIResponse.self) { result in
-            switch result {
-            case .success(let response):
-                let reply = response.choices.first?.message.content ?? "No response"
-                completion(.success(reply))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        let response: OpenAIResponse = try await networkClient.sendRequest(
+            request,
+            responseType: OpenAIResponse.self
+        )
+
+        return response.choices.first?.message.content ?? "No response"
     }
 }

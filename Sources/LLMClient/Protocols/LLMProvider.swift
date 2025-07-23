@@ -6,5 +6,5 @@
 //
 
 public protocol LLMProvider {
-    func sendPrompt(_ prompt: String, model: OpenAIModel, completion: @escaping @Sendable (Result<String, Error>) -> Void)
+    func sendPrompt(_ prompt: String, model: OpenAIModel) async throws -> String
 }

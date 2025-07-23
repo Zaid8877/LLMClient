@@ -10,7 +10,6 @@ import Foundation
 public protocol NetworkClient {
     func sendRequest<T: Decodable>(
         _ request: URLRequest,
-        responseType: T.Type,
-        completion: @escaping @Sendable (Result<T, Error>) -> Void
-    )
+        responseType: T.Type
+    ) async throws -> T
 }
