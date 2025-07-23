@@ -69,14 +69,22 @@ public class DefaultNetworkClient: NetworkClient {
     ) async throws -> T {
         do {
             let (data, response) = try await session.data(for: request)
-
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200..<300).contains(httpResponse.statusCode) else {
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
             }
-
+            
+            if !(200..<300).contains(httpResponse.statusCode) {
+                // Attempt to parse the error message from the response body
+                if let errorMessage = try? JSONDecoder().decode(OpenAIErrorResponse.self, from: data) {
+                    throw NetworkError.apiError(errorMessage.error.message)
+                } else {
+                    throw NetworkError.statusCode(httpResponse.statusCode)
+                }
+            }
+            
             return try JSONDecoder().decode(T.self, from: data)
-
+            
         } catch let decodingError as DecodingError {
             throw NetworkError.decoding(decodingError)
         } catch {
@@ -87,12 +95,11 @@ public class DefaultNetworkClient: NetworkClient {
 
 }
 struct OpenAIErrorResponse: Decodable {
-    let error: OpenAIError
+    struct APIError: Decodable {
+        let message: String
+    }
+
+    let error: APIError
 }
 
-struct OpenAIError: Decodable {
-    let message: String
-    let type: String?
-    let param: String?
-    let code: String?
-}
+

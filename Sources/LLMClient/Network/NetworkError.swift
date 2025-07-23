@@ -14,6 +14,7 @@ enum NetworkError: LocalizedError {
     case decoding(Error)
     case statusCode(Int)
     case apiError(String)
+    
 
     var errorDescription: String? {
         switch self {
