@@ -12,7 +12,7 @@ public class GPTClient {
         self.provider = provider
     }
 
-    public func send(prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
-        provider.sendPrompt(prompt, completion: completion)
+    public func send(prompt: String, completion: @escaping @Sendable (Result<String, Error>) -> Void) {
+        provider.sendPrompt(prompt, model: OpenAIConfig.defaultModel, completion: completion)
     }
 }

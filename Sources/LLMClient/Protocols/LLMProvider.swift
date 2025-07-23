@@ -6,5 +6,5 @@
 //
 
 public protocol LLMProvider {
-    func sendPrompt(_ prompt: String, completion: @escaping (Result<String, Error>) -> Void)
+    func sendPrompt(_ prompt: String, model: String, completion: @escaping @Sendable (Result<String, Error>) -> Void)
 }
