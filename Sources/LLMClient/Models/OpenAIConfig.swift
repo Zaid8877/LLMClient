@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct OpenAIConfig {
+internal struct OpenAIConfig {
     static let apiBaseURL = URL(string: "https://api.openai.com/v1/chat/completions")!
     static let authHeader = "Authorization"
     static let contentTypeHeader = "Content-Type"

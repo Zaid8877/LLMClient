@@ -5,7 +5,7 @@
 //  Created by Zaid Tayyab on 22/07/2025.
 //
 
-struct OpenAIResponse: Codable {
+internal struct OpenAIResponse: Codable {
     struct Choice: Codable {
         struct Message: Codable {
             let role: String

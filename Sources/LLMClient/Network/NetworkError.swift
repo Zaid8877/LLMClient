@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkError: LocalizedError {
+internal enum NetworkError: LocalizedError {
     case requestFailed(Error)
     case invalidResponse
     case noData
